@@ -2,7 +2,7 @@ SELECT
   deployment_day,
   IFNULL(incident_count, 0) as incident_count,
   IFNULL(deployment_count, 0) as deployment_count,
-  IFNULL(incident_count, 0) / IFNULL(deployment_count, 0) AS change_failure_rate
+  IFNULL(incident_count, 0) / IFNULL(deployment_count, 1) AS change_failure_rate
 FROM
   (SELECT 
     TIMESTAMP_TRUNC(time_created, DAY) AS deployment_day,
