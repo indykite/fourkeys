@@ -7,8 +7,8 @@ FROM (
     TIMESTAMP_TRUNC(c.time_created, DAY) AS day,
     PERCENTILE_CONT(
       # Ignore negative durations (status changes in wrong order)
-      IF(TIMESTAMP_DIFF(d.time_created, c.time_created, MINUTE) > 0, TIMESTAMP_DIFF(d.time_created, c.time_created, MINUTE), NULL),
-      0.5) # Median
+      IF(TIMESTAMP_DIFF(d.time_created, c.time_created, DAY) > 0, TIMESTAMP_DIFF(d.time_created, c.time_created, DAY), NULL),
+      0.1) # Median
       OVER (PARTITION BY TIMESTAMP_TRUNC(c.time_created, DAY)) AS med_time_to_change, # Minutes
   FROM 
   (
@@ -24,7 +24,7 @@ FROM (
       change_id, 
       time_created 
     FROM four_keys.changes 
-    WHERE status = 'Code complete'
+     WHERE status in ('Code complete', 'QA')
   ) c 
   ON d.change_id = c.change_id
 )

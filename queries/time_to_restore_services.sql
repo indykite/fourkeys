@@ -7,7 +7,7 @@ FROM (
     TIMESTAMP_TRUNC(c1.time_created, DAY) AS day,
     c1.change_id,  
     PERCENTILE_CONT(
-      TIMESTAMP_DIFF(c2.time_created, c1.time_created, MINUTE), 0.5
+      TIMESTAMP_DIFF(c2.time_created, c1.time_created, DAY), 0.1
     ) OVER(PARTITION BY TIMESTAMP_TRUNC(c1.time_created, DAY), c1.change_id) AS daily_med_time_to_restore
   FROM 
     four_keys.changes c1
